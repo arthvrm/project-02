@@ -1,0 +1,197 @@
+[
+  {
+    "id": "REQ-001",
+    "category": "автоматизація",
+    "target_department": null,
+    "priority": "high",
+    "short_summary": "Відгук на запит про автоматизацію звіту по Google Ads.",
+    "requested_actions": [
+      "Створити скрипт або процес для автоматизованого вивантаження CSV-файлів і формування звітів"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-002",
+    "category": "баг/підтримка",
+    "target_department": null,
+    "priority": "low",
+    "short_summary": "Запит на створення бота для хлопців.",
+    "requested_actions": [
+      "створити бот"
+    ],
+    "needs_clarification": true
+  },
+  {
+    "id": "REQ-003",
+    "category": "автоматизація",
+    "target_department": "продажів",
+    "priority": "high",
+    "short_summary": "Офіс продажів просять автоматично створювати коротке саммарі та список домовленостей з кожного дзвінка у PlanFix.",
+    "requested_actions": [
+      "Розробити та реалізувати автоматизовану систему для створення саммарів та списку домовленостей",
+      "Інтегрувати цю систему з PlanFix"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-004",
+    "category": "питання/консультація",
+    "target_department": null,
+    "priority": "low",
+    "short_summary": "Запит на консультацію щодо можливості використання AI для оцінки якості статей перед публікацією.",
+    "requested_actions": [],
+    "needs_clarification": true
+  },
+  {
+    "id": "REQ-006",
+    "category": "звіт/аналітика",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Згенерувати пояснення до експорту аналітичних даних з BigQuery у вигляді короткого тексту у Google Докс.",
+    "requested_actions": [
+      "загрузити експорт аналітичних даних з BigQuery",
+      "генерувати короткуplain-language пояснення ключових змін тиждень до тижня",
+      "вивести результат у Google Докс"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-007",
+    "category": "автоматизація",
+    "target_department": null,
+    "priority": "high",
+    "short_summary": "Автоматизація по інвойсам з Мети не працює, рахунки висять.",
+    "requested_actions": [
+      "послідовно дiагностикувати проблему",
+      "вирепалювати пошкодження",
+      "застосувати полегшення"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-008",
+    "category": "баг/підтримка",
+    "target_department": null,
+    "priority": "low",
+    "short_summary": "Користувач висловлює задоволення з роботи системи.",
+    "requested_actions": [],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-009",
+    "category": "автоматизація",
+    "target_department": "HR",
+    "priority": "medium",
+    "short_summary": "Вимога до автоматизації первинного скринінгу PDF резюме на технічні вакансії з виходом структурованих даних і оцінки.",
+    "requested_actions": [
+      "Розробити та реалізувати сприймник для завантаження PDF резюме",
+      "Обробити завантажені PDF резюме з виведенням структурованих даних",
+      "Оцінити підходящість кандидатів за вимогами до вакансій",
+      "Доставити результати оцінювання у вигляді короткого резюме"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-010",
+    "category": "автоматизація",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Автоматизувати збір згадок про Netpeak в телеграм-каналах і надавати дайджест раз на день, а також алерти для негативних згадок.",
+    "requested_actions": [
+      "Автоматизувати збір зgradation netpeak у телеграм-каналах",
+      "Надавати дайджест раз на день з згадками про Netpeak",
+      "Створити алерти для негативних згадок"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-011",
+    "category": "звіт/аналітика",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Запит на створення якоїсь таблички.",
+    "requested_actions": [
+      "Створити табличку"
+    ],
+    "needs_clarification": true
+  },
+  {
+    "id": "REQ-012",
+    "category": "питання/консультація",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Запит на закупише новго ноутбука для рендеру відео в SMM-відділі з бюджетом до 80к.",
+    "requested_actions": [
+      "подати заявку на закупишу"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-013",
+    "category": "звіт/аналітика",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Користувач просить пригніти звіт по Google Ads, який було вимагано Олі минулого понеділка.",
+    "requested_actions": [
+      "Надіслати звіт по Google Ads"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-014",
+    "category": "інтеграція",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Запрошення перевірити інструмент за посиланням та можливість реалізації аналогічної функціональності для компанії.",
+    "requested_actions": [
+      "Переглянути посилання на тримуваний інструмент",
+      "Оцінити можливість реалізації аналогічної функціональності для нашої компанії"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-015",
+    "category": "автоматизація",
+    "target_department": null,
+    "priority": "medium",
+    "short_summary": "Створити 5 коротких постів для соцмереж за довгого інтерв'ю у нашому tone of voice.",
+    "requested_actions": [
+      "Зробити з довгого інтерв'ю 5 коротких постів",
+      "Використати наш Tone of Voice"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-016",
+    "category": "баг/підтримка",
+    "target_department": null,
+    "priority": "low",
+    "short_summary": "Запит на розуміння, чи нормально, якщо відповіді ассистента не завжди повністю по темі.",
+    "requested_actions": [],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-017",
+    "category": "інтеграція",
+    "target_department": null,
+    "priority": "high",
+    "short_summary": "Треба інтегрувати Slack з Planfix, щоб задачі з каналу #support автоматично створювалися тікетами.",
+    "requested_actions": [
+      "інтегрувати Slack з Planfix"
+    ],
+    "needs_clarification": false
+  },
+  {
+    "id": "REQ-018",
+    "category": "звіт/аналітика",
+    "target_department": null,
+    "priority": "high",
+    "short_summary": "Створити дашборд для аналізу аномалій в витратах по підрядниках з BigQuery.",
+    "requested_actions": [
+      "Створити дашборд",
+      "Розрахувати аномалії у витräтах",
+      "Додати пояснення для адміністраторів"
+    ],
+    "needs_clarification": false
+  }
+]

@@ -1,4 +1,5 @@
 import csv
+import json
 
 from llm import classify_request
 
@@ -10,6 +11,19 @@ def read_requests(file_path: str) -> list[dict[str, str]]:
         return list(reader)
 
 
+def save_results(
+    results: list[dict],
+    file_path: str,
+) -> None:
+    with open(file_path, "w", encoding="utf-8") as file:
+        json.dump(
+            results,
+            file,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+
 def main() -> None:
     requests = read_requests("app/input_requests.csv")
 
@@ -17,20 +31,32 @@ def main() -> None:
         print("No requests found in CSV file.")
         return
 
-    first_request = requests[0]
+    results = []
 
-    print(f"Processing request: {first_request['id']}")
-    print(f"Text: {first_request['raw_text']}")
+    for request in requests:
+        request_id = request["id"]
+
+        print(f"Processing {request_id}...")
+
+        classification = classify_request(request["raw_text"])
+
+        if classification is None:
+            print(f"Skipping {request_id}: classification failed.")
+            continue
+
+        result = {
+            "id": request_id,
+            **classification.model_dump(mode="json"),
+        }
+
+        results.append(result)
+
+    save_results(results, "output.json")
+
     print()
-
-    result = classify_request(first_request["raw_text"])
-
-    if result is None:
-        print("Request classification failed.")
-        return
-
-    print("Classification:")
-    print(result.model_dump_json(indent=2, ensure_ascii=False))
+    print(f"Processed: {len(requests)}")
+    print(f"Successfully classified: {len(results)}")
+    print(f"Output saved to: output.json")
 
 
 if __name__ == "__main__":
