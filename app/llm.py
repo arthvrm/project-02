@@ -1,63 +1,78 @@
 from langchain_ollama import OllamaLLM
 
+from models import RequestClassification
+
 
 llm = OllamaLLM(model="qwen2.5:7b-instruct")
 
 
-def classify_request(request_text: str) -> str:
+def classify_request(request_text: str) -> RequestClassification | None:
     prompt = f"""
-Ти класифікатор внутрішніх запитів AI-юніту.
+You are an AI request classifier for an internal AI solutions team.
 
-Проаналізуй наступний запит:
+Analyze the following internal request:
 
 ---
 {request_text}
 ---
 
-Поверни результат ТІЛЬКИ у форматі JSON.
+Return ONLY valid JSON. Do not include Markdown, explanations,
+comments, or any text outside the JSON object.
 
-Обов'язкові поля:
-
-- "category" — одне з:
-  "автоматизація",
-  "інтеграція",
-  "звіт/аналітика",
-  "баг/підтримка",
-  "питання/консультація",
-  "поза скоупом"
-
-- "target_department" — відділ-замовник.
-  Якщо визначити неможливо — null.
-
-- "priority" — одне з:
-  "low",
-  "medium",
-  "high".
-  Визначай за терміновістю, тоном та змістом запиту.
-
-- "short_summary" — коротко опиши суть запиту одним реченням.
-
-- "requested_actions" — список конкретних дій, які очікує замовник.
-  Якщо конкретних дій немає — порожній список.
-
-- "needs_clarification" — true, якщо запит недостатньо конкретний
-  для початку роботи. Інакше false.
-
-Не додавай жодних пояснень поза JSON.
-
-Приклад формату відповіді:
+The JSON must contain exactly these fields:
 
 {{
-  "category": "автоматизація",
-  "target_department": "маркетинг",
-  "priority": "medium",
-  "short_summary": "Автоматизувати щотижневий збір та формування звіту по Google Ads.",
-  "requested_actions": [
-    "отримувати дані Google Ads",
-    "формувати звіт по основних метриках кампаній"
-  ],
-  "needs_clarification": false
+    "category": string,
+    "target_department": string | null,
+    "priority": string,
+    "short_summary": string,
+    "requested_actions": string[],
+    "needs_clarification": boolean
 }}
+
+Rules:
+
+1. "category" must be exactly one of:
+   - "автоматизація"
+   - "інтеграція"
+   - "звіт/аналітика"
+   - "баг/підтримка"
+   - "питання/консультація"
+   - "поза скоупом"
+
+2. "target_department" is the department that requested the task.
+   If the department cannot be determined from the request, use null.
+
+3. "priority" must be exactly one of:
+   - "low"
+   - "medium"
+   - "high"
+
+   Determine priority from the urgency, tone, deadlines,
+   and business impact described in the request.
+
+4. "short_summary" must describe the essence of the request
+   in one concise sentence.
+
+5. "requested_actions" must contain the concrete actions requested
+   by the user. It can contain zero, one, or multiple actions.
+
+6. "needs_clarification" must be true if the request is too vague
+   or lacks enough information to start working on it.
+   Otherwise, use false.
+
+Important:
+- Do not invent information that is not present in the request.
+- If the department is unknown, use null.
+- Do not add any fields that are not specified above.
 """
 
-    return llm.invoke(prompt)
+    raw_response = llm.invoke(prompt)
+
+    try:
+        return RequestClassification.model_validate_json(raw_response)
+    except Exception as exc:
+        print(f"Failed to validate LLM response: {exc}")
+        print(f"Raw LLM response: {raw_response}")
+
+        return None
