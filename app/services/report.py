@@ -1,10 +1,12 @@
 from collections import Counter
 
-from app.models import ClassifiedRequest
+from app.models import ClassifiedRequest, InputRequest
 
 
 def generate_report(
     results: list[ClassifiedRequest],
+    failed_requests: list[InputRequest],
+    total_requests: int,
     file_path: str,
 ) -> None:
     category_counts = Counter(
@@ -31,7 +33,11 @@ def generate_report(
     report_lines = [
         "# Request Classification Report",
         "",
-        f"**Total requests:** {len(results)}",
+        "## Processing Statistics",
+        "",
+        f"- Total requests: {total_requests}",
+        f"- Successfully classified: {len(results)}",
+        f"- Failed: {len(failed_requests)}",
         "",
         "## By Category",
         "",
@@ -55,10 +61,9 @@ def generate_report(
     )
 
     for priority in ("high", "medium", "low"):
-        count = priority_counts.get(priority, 0)
-
         report_lines.append(
-            f"| {priority} | {count} |"
+            f"| {priority} | "
+            f"{priority_counts.get(priority, 0)} |"
         )
 
     report_lines.extend(
@@ -93,6 +98,25 @@ def generate_report(
     else:
         report_lines.append(
             "No requests require clarification."
+        )
+
+    report_lines.extend(
+        [
+            "",
+            "## Failed Requests",
+            "",
+        ]
+    )
+
+    if failed_requests:
+        for request in failed_requests:
+            report_lines.append(
+                f"- **{request.id}** — "
+                f"Classification failed."
+            )
+    else:
+        report_lines.append(
+            "No requests failed classification."
         )
 
     report = "\n".join(report_lines)

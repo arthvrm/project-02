@@ -5,7 +5,9 @@ from typing import Any
 from app.models import InputRequest
 
 
-def read_requests(file_path: str) -> list[InputRequest]:
+def read_requests(
+    file_path: str,
+) -> list[InputRequest]:
     with open(
         file_path,
         "r",

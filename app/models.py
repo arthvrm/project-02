@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -21,7 +22,7 @@ class Priority(str, Enum):
 class InputRequest(BaseModel):
     id: str
     channel: str
-    timestamp: str
+    timestamp: datetime
     raw_text: str = Field(min_length=1)
 
 

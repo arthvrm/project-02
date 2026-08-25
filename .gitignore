@@ -224,6 +224,4 @@ __marimo__/
 .streamlit/secrets.toml
 
 # my
-qdrant_storage/
-data/docs/
-migrations/versions/
+results/
