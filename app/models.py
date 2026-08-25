@@ -18,6 +18,13 @@ class Priority(str, Enum):
     HIGH = "high"
 
 
+class InputRequest(BaseModel):
+    id: str
+    channel: str
+    timestamp: str
+    raw_text: str = Field(min_length=1)
+
+
 class RequestClassification(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -27,3 +34,7 @@ class RequestClassification(BaseModel):
     short_summary: str = Field(min_length=1)
     requested_actions: list[str]
     needs_clarification: bool
+
+
+class ClassifiedRequest(RequestClassification):
+    id: str
