@@ -6,7 +6,7 @@ CLI pipeline читає запити з CSV, класифікує кожен з�
 
 ### Вимоги
 
-- Python 3.12 або новіший
+- Python 3.12+
 - API-ключ Google Gemini
 - `uv` (рекомендовано) або `pip`
 
@@ -22,16 +22,18 @@ uv sync
 python -m venv .venv
 # Windows PowerShell
 .venv\Scripts\Activate.ps1
-python -m pip install -e .
+або
+.venv/Scripts/activate
+python -m pip install -r requirements.txt
 ```
 
 ### Змінні середовища
 
-Створіть файл `.env` у корені проєкту:
+Створіть файл `.env` у корені проєкту(приклад можна зкопіюапти з .env.example):
 
 ```env
-GEMINI_API_KEY=your-google-gemini-api-key
-LLM_MODEL=gemini-2.5-flash
+GEMINI_API_KEY=ваш апі ключ
+LLM_MODEL=gemini-3.5-flash-lite
 MAX_RETRIES=3
 INPUT_FILE=inputs/input_requests.csv
 OUTPUT_FILE=results/output.json
@@ -40,25 +42,10 @@ REPORT_FILE=results/report.md
 
 Обов'язкова змінна лише `GEMINI_API_KEY`. Інші мають значення за замовчуванням:
 
-| Змінна | Значення за замовчуванням | Призначення |
-|---|---|---|
-| `LLM_MODEL` | `qwen2.5:7b-instruct` | Назва моделі, передана Gemini-клієнту |
-| `MAX_RETRIES` | `3` | Максимальна кількість спроб на запит |
-| `INPUT_FILE` | `inputs/input_requests.csv` | Вхідний CSV |
-| `OUTPUT_FILE` | `results/output.json` | JSON із класифікованими запитами |
-| `REPORT_FILE` | `results/report.md` | Підсумковий Markdown-звіт |
-
-У поточній реалізації використовується `ChatGoogleGenerativeAI`, тому для Gemini потрібно явно вказати підтримувану Gemini-модель. Дефолтне значення `qwen2.5:7b-instruct` виглядає як назва локальної Ollama-моделі й саме по собі не перемикає застосунок на Ollama.
 
 ### Команда запуску
 
-Із кореня проєкту:
-
-```bash
-uv run python -m app.main
-```
-
-або після активації `.venv`:
+після активації `.venv`:
 
 ```bash
 python -m app.main
