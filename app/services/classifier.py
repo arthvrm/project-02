@@ -1,6 +1,6 @@
 import logging
 
-from langchain_ollama import OllamaLLM
+from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import ValidationError
 
 from app.models import RequestClassification
@@ -11,9 +11,14 @@ class RequestClassifier:
         self,
         model_name: str,
         max_retries: int,
+        api_key: str,
         logger: logging.Logger,
     ) -> None:
-        self.llm = OllamaLLM(model=model_name)
+        self.llm = ChatGoogleGenerativeAI(
+            model=model_name,
+            google_api_key=api_key,
+        )
+
         self.max_retries = max_retries
         self.logger = logger
 
@@ -30,18 +35,14 @@ class RequestClassifier:
                 self.max_retries,
             )
 
-            raw_response = self.llm.invoke(prompt)
-
             try:
-                result = RequestClassification.model_validate_json(
+                response = self.llm.invoke(prompt)
+
+                raw_response = self._extract_text(response)
+
+                return RequestClassification.model_validate_json(
                     raw_response
                 )
-
-                self.logger.info(
-                    "LLM response validated successfully"
-                )
-
-                return result
 
             except ValidationError as exc:
                 self.logger.warning(
@@ -52,23 +53,56 @@ class RequestClassifier:
                     exc,
                 )
 
-                if attempt == self.max_retries:
-                    self.logger.error(
-                        "All LLM classification attempts failed"
-                    )
+            except Exception:
+                self.logger.exception(
+                    "LLM request failed "
+                    "on attempt %d/%d",
+                    attempt,
+                    self.max_retries,
+                )
+
+        self.logger.error(
+            "All LLM classification attempts failed"
+        )
 
         return None
+
+    @staticmethod
+    def _extract_text(response) -> str:
+        content = response.content
+
+        if isinstance(content, str):
+            return content
+
+        if isinstance(content, list):
+            text_parts = []
+
+            for block in content:
+                if (
+                    isinstance(block, dict)
+                    and block.get("type") == "text"
+                ):
+                    text = block.get("text")
+
+                    if text:
+                        text_parts.append(text)
+
+            return "".join(text_parts)
+
+        raise TypeError(
+            f"Unsupported response content type: "
+            f"{type(content).__name__}"
+        )
 
     @staticmethod
     def _build_prompt(request_text: str) -> str:
         return f"""
 You are an AI request classifier for an internal AI solutions team.
 
-Your task is to analyze an internal request and return a structured
-classification.
+Analyze the following internal request.
 
-Return ONLY valid JSON. Do not include Markdown, explanations,
-comments, or any text outside the JSON object.
+Return ONLY valid JSON. Do not include Markdown,
+explanations, comments, or any text outside the JSON object.
 
 The JSON must contain exactly these fields:
 
@@ -113,50 +147,44 @@ Classification guidelines:
   or requires technical support.
 
 - "питання/консультація":
-  The user asks for information, an opinion, or a theoretical
-  explanation without requesting implementation.
+  An informational, theoretical, or advisory question.
 
 - "поза скоупом":
-  The request is outside the responsibilities of an AI solutions
-  team or is unrelated to the supported scope.
+  A request outside the responsibilities of an AI solutions team.
 
 Priority guidelines:
 
 - "high":
-  Explicit urgency, critical business impact, or an immediate
-  deadline.
+  Explicit urgency, critical business impact,
+  or an immediate deadline.
 
 - "medium":
   A concrete business request without critical urgency.
 
 - "low":
-  Informational requests, ideas, non-urgent improvements,
-  or requests without a clear deadline.
+  Informational requests, ideas, or non-urgent improvements.
 
-Important rules:
+Important:
 
-1. "target_department" must contain the requesting department
-   if it can be inferred from the request. Otherwise use null.
+1. target_department must contain the requesting department
+   if it can be determined. Otherwise use null.
 
-2. "short_summary" must contain exactly one concise sentence.
+2. short_summary must be exactly one concise sentence.
 
-3. "requested_actions" must contain only concrete actions
-   requested by the user.
+3. requested_actions must contain concrete requested actions.
 
-4. "needs_clarification" must be true if the request is too vague
-   to start implementation without additional information.
+4. needs_clarification must be true if the request is too vague
+   to start implementation.
 
-5. Do not invent information that is not present in the request.
+5. Do not invent information.
 
-6. Do not add fields that are not specified in the schema.
+6. Do not add fields outside the schema.
 
-Examples:
-
-Example 1:
+Example:
 
 Request:
 "Can you automate our weekly Google Ads report? We currently
-export CSV manually every Monday and copy the data into a sheet."
+export CSV manually every Monday."
 
 Output:
 {{
@@ -169,42 +197,6 @@ Output:
         "generate a weekly report"
     ],
     "needs_clarification": false
-}}
-
-Example 2:
-
-Request:
-"URGENT. We need to export all contractors with expenses over
-50k for May today. Accounting needs it immediately."
-
-Output:
-{{
-    "category": "звіт/аналітика",
-    "target_department": "accounting",
-    "priority": "high",
-    "short_summary": "Export contractors whose May expenses exceed 50k.",
-    "requested_actions": [
-        "filter contractors by May expenses",
-        "export the matching contractors"
-    ],
-    "needs_clarification": false
-}}
-
-Example 3:
-
-Request:
-"Guys, we need a bot."
-
-Output:
-{{
-    "category": "автоматизація",
-    "target_department": null,
-    "priority": "medium",
-    "short_summary": "Create a bot.",
-    "requested_actions": [
-        "create a bot"
-    ],
-    "needs_clarification": true
 }}
 
 Now classify this request:

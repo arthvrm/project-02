@@ -6,6 +6,7 @@ from app.services.report import generate_report
 from app.utils.config import (
     INPUT_FILE,
     LLM_MODEL,
+    GEMINI_API_KEY,
     MAX_RETRIES,
     OUTPUT_FILE,
     REPORT_FILE,
@@ -27,6 +28,7 @@ def main() -> None:
 
     classifier = RequestClassifier(
         model_name=LLM_MODEL,
+        api_key=GEMINI_API_KEY,
         max_retries=MAX_RETRIES,
         logger=logger,
     )
