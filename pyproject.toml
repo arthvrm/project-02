@@ -5,6 +5,8 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "google-auth>=2.57.0",
+    "gspread>=6.2.1",
     "langchain-google-genai>=4.3.5",
     "langchain-ollama>=1.1.0",
     "pydantic>=2.13.4",
