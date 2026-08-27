@@ -30,3 +30,17 @@ REPORT_FILE = os.getenv(
     "REPORT_FILE",
     "results/report.md",
 )
+
+GOOGLE_CREDENTIALS_FILE = os.getenv(
+    "GOOGLE_CREDENTIALS_FILE",
+    "credentials.json",
+)
+
+GOOGLE_SPREADSHEET_ID = os.getenv(
+    "GOOGLE_SPREADSHEET_ID",
+)
+
+GOOGLE_WORKSHEET_NAME = os.getenv(
+    "GOOGLE_WORKSHEET_NAME",
+    "Requests",
+)

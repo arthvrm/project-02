@@ -7,12 +7,17 @@ from app.utils.config import (
     INPUT_FILE,
     LLM_MODEL,
     GEMINI_API_KEY,
+    GOOGLE_CREDENTIALS_FILE,
+    GOOGLE_SPREADSHEET_ID,
+    GOOGLE_WORKSHEET_NAME,
     MAX_RETRIES,
     OUTPUT_FILE,
     REPORT_FILE,
 )
 from app.utils.file_handler import read_requests, save_json
 from app.utils.logger import setup_logger
+
+from app.google_sheets import send_results_to_google_sheets
 
 
 def main() -> None:
@@ -88,6 +93,18 @@ def main() -> None:
     logger.info(
         "Report saved to %s",
         REPORT_FILE,
+    )
+    
+    sheets_rows = send_results_to_google_sheets(
+        results=results,
+        credentials_file=GOOGLE_CREDENTIALS_FILE,
+        spreadsheet_id=GOOGLE_SPREADSHEET_ID,
+        worksheet_name=GOOGLE_WORKSHEET_NAME,
+    )
+    logger.info(
+        "Google Sheets updated: %d rows added to %s",
+        sheets_rows,
+        GOOGLE_WORKSHEET_NAME,
     )
 
 
