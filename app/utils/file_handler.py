@@ -1,4 +1,5 @@
 import csv
+import os
 import json
 from typing import Any
 
@@ -22,10 +23,16 @@ def read_requests(
         ]
 
 
+
 def save_json(
     data: list[dict[str, Any]],
     file_path: str,
 ) -> None:
+    directory = os.path.dirname(file_path)
+
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+
     with open(
         file_path,
         "w",
