@@ -48,7 +48,7 @@ python -m pip install -r requirements.txt
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
-LLM_MODEL=gemini-2.5-flash
+LLM_MODEL=gemini-3.5-flash-lite
 MAX_RETRIES=3
 INPUT_FILE=inputs/input_requests.csv
 OUTPUT_FILE=results/output.json
