@@ -60,7 +60,7 @@ GOOGLE_WORKSHEET_NAME=Requests
 
 `GEMINI_API_KEY`, `GOOGLE_CREDENTIALS_FILE` і `GOOGLE_SPREADSHEET_ID` потрібні для повного запуску. Значення за замовчуванням:
 
-- `LLM_MODEL`: `qwen2.5:7b-instruct`
+- `LLM_MODEL`: `gemini-3.5-flash-lite`
 - `MAX_RETRIES`: `3`
 - `INPUT_FILE`: `inputs/input_requests.csv`
 - `OUTPUT_FILE`: `results/output.json`
