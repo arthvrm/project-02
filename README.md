@@ -7,7 +7,7 @@ CLI pipeline читає запити з CSV, класифікує кожен з�
 ### Вимоги
 
 - Python 3.12+
-- API-ключ Google Gemini
+- [API-ключ Google Gemini](https://ai.google.dev/gemini-api/docs/api-key) 
 - `uv` (рекомендовано) або `pip`
 
 Встановлення залежностей через `uv`:
@@ -58,6 +58,11 @@ python -m app.main
 ```bash
 uv run pytest
 ```
+або просто
+```bash
+pytest
+```
+
 
 ## Де рішення ламається та обмеження
 
