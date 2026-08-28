@@ -9,7 +9,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 LLM_MODEL = os.getenv(
     "LLM_MODEL",
-    "qwen2.5:7b-instruct",
+    "gemini-3.5-flash-lite",
 )
 
 MAX_RETRIES = int(

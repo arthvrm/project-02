@@ -7,25 +7,13 @@ from app.models import RequestClassification
 
 
 class RequestClassifier:
-    def __init__(
-        self,
-        model_name: str,
-        max_retries: int,
-        api_key: str,
-        logger: logging.Logger,
-    ) -> None:
-        self.llm = ChatGoogleGenerativeAI(
-            model=model_name,
-            google_api_key=api_key,
-        )
-
+    def __init__(self, model_name: str, max_retries: int, api_key: str, logger: logging.Logger) -> None:
+        self.llm = ChatGoogleGenerativeAI(model=model_name, google_api_key=api_key)
         self.max_retries = max_retries
         self.logger = logger
 
-    def classify(
-        self,
-        request_text: str,
-    ) -> RequestClassification | None:
+
+    def classify(self, request_text: str) -> RequestClassification | None:
         prompt = self._build_prompt(request_text)
 
         for attempt in range(1, self.max_retries + 1):
@@ -37,12 +25,9 @@ class RequestClassifier:
 
             try:
                 response = self.llm.invoke(prompt)
-
                 raw_response = self._extract_text(response)
-
-                return RequestClassification.model_validate_json(
-                    raw_response
-                )
+                
+                return RequestClassification.model_validate_json(raw_response)
 
             except ValidationError as exc:
                 self.logger.warning(
@@ -61,11 +46,10 @@ class RequestClassifier:
                     self.max_retries,
                 )
 
-        self.logger.error(
-            "All LLM classification attempts failed"
-        )
-
+        self.logger.error("All LLM classification attempts failed")
+        
         return None
+
 
     @staticmethod
     def _extract_text(response) -> str:
@@ -78,12 +62,8 @@ class RequestClassifier:
             text_parts = []
 
             for block in content:
-                if (
-                    isinstance(block, dict)
-                    and block.get("type") == "text"
-                ):
+                if isinstance(block, dict) and block.get("type") == "text":
                     text = block.get("text")
-
                     if text:
                         text_parts.append(text)
 
@@ -93,6 +73,7 @@ class RequestClassifier:
             f"Unsupported response content type: "
             f"{type(content).__name__}"
         )
+
 
     @staticmethod
     def _build_prompt(request_text: str) -> str:
